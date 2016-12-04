@@ -26,7 +26,7 @@ If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 
 Using `ExRedis` create a new client and pass it into the feature toggle library
 
-```
+```elixir
 {:ok, client} = Exredis.start_link
 
 # activate a feature
@@ -40,6 +40,10 @@ Molasses.activate(client, :my_feature, [2, 4, 5])
 
 # activate a feature for a subset of string based userIds (think a mongoId) or a list of groups
 Molasses.activate(client, :my_feature, ["reallylongid", "long id"])
+
+# activate a feature for only one user or group 
+Molasses.activate(client, :my_feature, "reallylongid")
+Molasses.activate(client, :my_feature, 7)
 
 
 # checking if a feature is active for all users

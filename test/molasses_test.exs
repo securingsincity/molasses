@@ -6,31 +6,31 @@ defmodule MolassesTest do
   test "activate/2 sets key to 100% and sets to active" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature)
-    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100||"
+    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100|"
   end
 
   test "activate/3 with integer sets key to percentage and activates" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature, 80)
-    assert Exredis.Api.get(client, "molasses_my_feature") == "true|80||"
+    assert Exredis.Api.get(client, "molasses_my_feature") == "true|80|"
   end
 
   test "activate/3 with list sets key and activates for a list of users" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature, [1, 4])
-    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100|1,4|"
+    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100|1,4"
   end
 
   test "activate/3 with string sets key and activates for a group" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature, :admin)
-    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100||admin"
+    assert Exredis.Api.get(client, "molasses_my_feature") == "true|100|admin"
   end
   
   test "deactivate/2 sets key to 0% and sets to inactive" do
     {:ok, client} = Exredis.start_link
     Molasses.deactivate(client, :my_feature)
-    assert Exredis.Api.get(client, "molasses_my_feature") == "false|0||"
+    assert Exredis.Api.get(client, "molasses_my_feature") == "false|0|"
   end
 
   test "get_feature returns get and formatted feature" do
@@ -40,8 +40,7 @@ defmodule MolassesTest do
       name: :my_feature,
       active: true,
       percentage: 100,
-      group: "admin",
-      users: []
+      users: ["admin"]
     }
   end
 
@@ -52,7 +51,6 @@ defmodule MolassesTest do
       name: :my_feature,
       active: false,
       percentage: 0,
-      group: "",
       users: []
     }
   end
@@ -64,8 +62,18 @@ defmodule MolassesTest do
       name: :my_feature,
       active: true,
       percentage: 100,
-      group: "",
       users: [1,4]
+    }
+  end
+
+  test "get_feature returns get and formatted feature of users with straings" do
+    {:ok, client} = Exredis.start_link
+    Molasses.activate(client, :my_feature, ["1a","a4"])
+    assert Molasses.get_feature(client, :my_feature) == %{
+      name: :my_feature,
+      active: true,
+      percentage: 100,
+      users: ["1a","a4"]
     }
   end
 
@@ -76,7 +84,6 @@ defmodule MolassesTest do
       name: :my_feature,
       active: true,
       percentage: 80,
-      group: "",
       users: []
     }
   end
@@ -149,15 +156,27 @@ defmodule MolassesTest do
   end
 
 
-  test "is_active/3 with string  with valid key that is active for a list of users then return false if user is not in list" do
+  test "is_active/3 with list of strings  with valid key that is active for a list of users then return false if user is not in list" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature, ["a", "b"])
     assert !Molasses.is_active(client, :my_feature, "c")
   end
 
-  test "is_active/3 with string  with valid key that is active for a list of users then return true if user is in list" do
+  test "is_active/3 with list of strings  with valid key that is active for a list of users then return true if user is in list" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature, ["a", "b"])
+    assert Molasses.is_active(client, :my_feature, "b")
+  end
+
+  test "is_active/3 with string  with valid key that is active for a list of users then return false if user is not in list" do
+    {:ok, client} = Exredis.start_link
+    Molasses.activate(client, :my_feature, "a")
+    assert !Molasses.is_active(client, :my_feature, "c")
+  end
+
+  test "is_active/3 with string  with valid key that is active for a list of users then return true if user is in list" do
+    {:ok, client} = Exredis.start_link
+    Molasses.activate(client, :my_feature, "b")
     assert Molasses.is_active(client, :my_feature, "b")
   end
 

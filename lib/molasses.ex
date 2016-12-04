@@ -4,7 +4,7 @@ defmodule Molasses do
         case get_feature(client, key) do
             {:error, _} -> false
             %{active: false} -> false
-            %{active: true,percentage: 100, group: "", users: []} -> true
+            %{active: true,percentage: 100, users: []} -> true
             %{active: true,percentage: 100} -> false
             %{active: true,percentage: _} -> false  
         end
@@ -14,7 +14,7 @@ defmodule Molasses do
         case get_feature(client, key) do
             {:error, _} -> false
             %{active: false} -> false
-            %{active: true,percentage: 100, group: "", users: []} -> true
+            %{active: true,percentage: 100, users: []} -> true
             %{active: true,percentage: 100, users: users} -> Enum.member?(users, id)
             %{active: true,percentage: percentage} when is_integer(id) ->
                 value = Integer.to_string(id) |> :erlang.crc32 |> rem(100) |> abs
@@ -29,12 +29,11 @@ defmodule Molasses do
         case Redis.get(client, key) do
             :undefined -> {:error, "failure"}
             result -> 
-                [active, percentage, users,group] = String.split(result, "|")
+                [active, percentage, users] = String.split(result, "|")
                 %{
                     name: key,
                     active: return_bool(active),
                     percentage: String.to_integer(percentage),
-                    group: group,
                     users: convert_to_list(users),
                 }
         end
@@ -49,9 +48,9 @@ defmodule Molasses do
 
     def prepare_value(x) do
         y = try do
-            y = String.to_integer(x)
+            String.to_integer(x)
         rescue 
-            _ -> y = x 
+            _ -> x 
         end
         y
     end
@@ -59,23 +58,23 @@ defmodule Molasses do
     def return_bool("false"), do: false 
 
     def activate(client, key) do
-        Redis.set(client, key, "true|100||")
+        Redis.set(client, key, "true|100|")
     end
 
     def activate(client, key, percentage) when is_integer(percentage) do
-        Redis.set(client, key, "true|#{percentage}||")
+        Redis.set(client, key, "true|#{percentage}|")
     end
 
     def activate(client, key, users) when is_list(users) do
         activated_users = Enum.join(users,",")
-        Redis.set(client, key, "true|100|#{activated_users}|")
+        Redis.set(client, key, "true|100|#{activated_users}")
     end
 
     def activate(client, key, group) do
-        Redis.set(client, key, "true|100||#{group}")
+        Redis.set(client, key, "true|100|#{group}")
     end
 
     def deactivate(client, key) do
-        Redis.set(client, key, "false|0||")
+        Redis.set(client, key, "false|0|")
     end
 end
