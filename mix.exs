@@ -5,8 +5,8 @@ defmodule Molasses.Mixfile do
     [app: :molasses,
      version: "0.1.0",
      elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
+     description: description,
+     package:package,
      deps: deps()]
   end
 
@@ -16,6 +16,20 @@ defmodule Molasses.Mixfile do
   def application do
     [applications: [:logger]]
   end
+
+  defp package do
+    [ files: [ "lib", "mix.exs", "README.md", "LICENSE" ],
+      maintainers: [ "James Hrisho" ],
+      licenses: [ "MIT" ],
+      links: %{ "GitHub" => "https://github.com/securingsincity/molasses" } ]
+  end
+
+  defp description do
+    """
+    A feature toggle library using redis. It allows to roll out to users based on a percentage of users or alternatively to a set of users or user ids
+    """
+  end
+
 
   # Dependencies can be Hex packages:
   #
