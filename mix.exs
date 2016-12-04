@@ -43,6 +43,7 @@ defmodule Molasses.Mixfile do
   defp deps do
     [
       {:mix_test_watch, "~> 0.2", only: :dev},
+      {:ex_doc, ">= 0.0.0", only: :dev},
       {:exredis, ">= 0.2.4", optional: true}
     ]
   end
