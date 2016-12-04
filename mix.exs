@@ -6,7 +6,7 @@ defmodule Molasses.Mixfile do
      version: "0.1.0",
      elixir: "~> 1.3",
      description: description,
-     package:package,
+     package: package,
      deps: deps()]
   end
 
