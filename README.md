@@ -60,5 +60,5 @@ Molasses.deactivate(client, :my_feature)
 
 ## To do
 
-- [ ] - Add support for mongo in addition to redis
+- [ ] - Add support for postgres/mysql in addition to redis
 - [ ] - Better documentation on configuration
