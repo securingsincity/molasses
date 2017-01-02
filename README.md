@@ -1,6 +1,6 @@
 # Molasses
 
-A feature toggle library using redis. It allows to roll out to users based on a percentage of users or alternatively to a set of users or user ids
+A feature toggle library using redis or ecto (postgres) as a backing service. It allows you to roll out to users based on a percentage of users or alternatively to a set of users or user ids
 
 ## Installation
 
@@ -30,30 +30,30 @@ Using `ExRedis` create a new client and pass it into the feature toggle library
 {:ok, client} = Exredis.start_link
 
 # activate a feature
-Molasses.activate(client, :my_feature)
+Molasses.activate(client, "my_feature")
 
 # activate a feature for a percentage of users
-Molasses.activate(client, :my_feature, 75)
+Molasses.activate(client, "my_feature", 75)
 
 # activate a feature for a subset of integer based userIds 
-Molasses.activate(client, :my_feature, [2, 4, 5])
+Molasses.activate(client, "my_feature", [2, 4, 5])
 
 # activate a feature for a subset of string based userIds (think a mongoId) or a list of groups
-Molasses.activate(client, :my_feature, ["reallylongid", "long id"])
+Molasses.activate(client, "my_feature", ["reallylongid", "long id"])
 
 # activate a feature for only one user or group 
-Molasses.activate(client, :my_feature, "reallylongid")
-Molasses.activate(client, :my_feature, 7)
+Molasses.activate(client, "my_feature", "reallylongid")
+Molasses.activate(client, "my_feature", 7)
 
 
 # checking if a feature is active for all users
-Molasses.is_active(client, :my_feature)
+Molasses.is_active(client, "my_feature")
 
 # checking if a feature is active for a specific user (based on percentage, or user id/group)
-Molasses.is_active(client, :my_feature, identifier)
+Molasses.is_active(client, "my_feature", identifier)
 
 # deactivate a feature
-Molasses.deactivate(client, :my_feature)
+Molasses.deactivate(client, "my_feature")
 
 ```
 

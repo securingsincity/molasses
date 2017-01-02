@@ -4,6 +4,10 @@ defmodule Molasses.StorageAdapter.RedisTest do
     use ExUnit.Case
     alias Molasses.StorageAdapter.Redis
     import Exredis.Api
+    setup do
+        Application.put_env(:molasses,:adapter, "redis")
+    end
+    
     test "get should return the value" do
         
         {:ok, client} = Exredis.start_link
