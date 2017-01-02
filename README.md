@@ -1,5 +1,8 @@
 # Molasses
 
+[![Build Status](https://travis-ci.org/securingsincity/molasses.svg?branch=master)](https://travis-ci.org/securingsincity/molasses)
+[![Coverage Status](https://coveralls.io/repos/github/securingsincity/molasses/badge.svg?branch=master)](https://coveralls.io/github/securingsincity/molasses?branch=master)
+
 A feature toggle library using redis or ecto (postgres) as a backing service. It allows you to roll out to users based on a percentage of users or alternatively to a set of users or user ids
 
 ## Installation
