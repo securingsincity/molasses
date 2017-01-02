@@ -2,6 +2,17 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
+config :molasses, Molasses,
+  repo: Molasses.Test.Repo,
+  model: Molasses.Test.MockResource
+
+config :molasses, Molasses.Test.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "postgres",
+  password: "postgres",
+  database: "molasses_test",
+  size: 10
+
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
 # file won't be loaded nor affect the parent project. For this reason,

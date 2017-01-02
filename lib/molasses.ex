@@ -9,7 +9,7 @@ defmodule Molasses do
             %{active: true,percentage: _} -> false  
         end
     end
-
+    
     def is_active(client, key, id)  do
         case get_feature(client, key) do
             {:error, _} -> false
