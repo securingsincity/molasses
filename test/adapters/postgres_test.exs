@@ -61,6 +61,16 @@ defmodule Molasses.StorageAdapter.PostgresTest do
     Repo.delete_all(Feature)
   end
 
+
+   test "activate/2 sets key to 100% and sets to active with molasses" do
+    Molasses.activate(Repo, "my_feature")
+    %Feature{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 100
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+
   test "activate/3 with integer sets key to percentage and activates" do
     Postgres.activate(Repo, "my_feature", 80)
     %{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
@@ -92,6 +102,27 @@ defmodule Molasses.StorageAdapter.PostgresTest do
   
   test "deactivate/2 sets key to 0% and sets to inactive" do
     Postgres.deactivate(Repo, "my_feature")
+    %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 0
+    assert users == ""
+    assert active == false
+    Repo.delete_all(Feature)
+  end
+
+
+test "activate/3 with string sets key and activates for a group using molasses" do
+    Molasses.activate(Repo, "my_feature", "admin")
+    %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 100
+    assert users == "admin"
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+  
+  test "deactivate/2 sets key to 0% and sets to inactiveusing molasses " do
+    Molasses.deactivate(Repo, "my_feature")
     %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
     assert name == "my_feature"
     assert percent == 0
