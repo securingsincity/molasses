@@ -1,9 +1,12 @@
-Application.put_env(:molasses,:client_type, "postgres")
 defmodule Molasses.StorageAdapter.PostgresTest do
     use ExUnit.Case
     alias Molasses.StorageAdapter.Postgres
     alias Molasses.Test.Repo
     alias Molasses.Models.Feature
+    setup do
+        Application.put_env(:molasses,:adapter, "ecto")
+    end
+    
     test "get should return the value" do
         Repo.insert!(%Feature{name: "foo", percentage: 90})
         %Feature{name: name, percentage: percent} = Postgres.get(Repo, "foo")

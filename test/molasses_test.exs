@@ -3,6 +3,10 @@ Code.require_file "./redis_helper.exs", __DIR__
 defmodule MolassesTest do
   use ExUnit.Case
   alias Molasses
+  setup do
+    Application.put_env(:molasses,:adapter, "redis")
+  end
+  
   test "activate/2 sets key to 100% and sets to active" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, :my_feature)
