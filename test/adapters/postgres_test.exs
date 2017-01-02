@@ -155,4 +155,14 @@ defmodule Molasses.StorageAdapter.PostgresTest do
     }
     Repo.delete_all(Feature)
   end
+  test "get_feature from molasses.ex" do
+    Molasses.activate(Repo, "my_feature", 80)
+    assert Molasses.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: true,
+      percentage: 80,
+      users: []
+    }
+    Repo.delete_all(Feature)
+  end
 end
