@@ -42,11 +42,114 @@ defmodule Molasses.StorageAdapter.PostgresTest do
    end
     
    test "remove should remove the value from the database" do
-       
        Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
        Postgres.remove Repo, "foo"
        assert Postgres.get(Repo, "foo") == nil
        Repo.delete_all(Feature)
    end
 
+
+   test "activate/2 sets key to 100% and sets to active" do
+    Postgres.activate(Repo, "my_feature")
+    %Feature{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 100
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+
+  test "activate/3 with integer sets key to percentage and activates" do
+    Postgres.activate(Repo, "my_feature", 80)
+    %{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 80
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+
+  test "activate/3 with list sets key and activates for a list of users" do
+    Postgres.activate(Repo, "my_feature", [1, 4])
+    %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 100
+    assert users == "1,4"
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+
+  test "activate/3 with string sets key and activates for a group" do
+    Postgres.activate(Repo, "my_feature", "admin")
+    %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 100
+    assert users == "admin"
+    assert active == true
+    Repo.delete_all(Feature)
+  end
+  
+  test "deactivate/2 sets key to 0% and sets to inactive" do
+    Postgres.deactivate(Repo, "my_feature")
+    %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
+    assert name == "my_feature"
+    assert percent == 0
+    assert users == ""
+    assert active == false
+    Repo.delete_all(Feature)
+  end
+
+   test "get_feature returns get and formatted feature" do
+    
+    Postgres.activate(Repo, "my_feature", "admin")
+    assert Postgres.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: true,
+      percentage: 100,
+      users: ["admin"]
+    }
+    Repo.delete_all(Feature)
+  end
+
+  test "get_feature returns get and formatted feature deactivated" do
+    Postgres.deactivate(Repo, "my_feature")
+    assert Postgres.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: false,
+      percentage: 0,
+      users: []
+    }
+    Repo.delete_all(Feature)
+  end
+
+  test "get_feature returns get and formatted feature of users" do
+    Postgres.activate(Repo, "my_feature", [1,4])
+    assert Postgres.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: true,
+      percentage: 100,
+      users: [1,4]
+    }
+    Repo.delete_all(Feature)
+  end
+
+  test "get_feature returns get and formatted feature of users with straings" do
+    Postgres.activate(Repo, "my_feature", ["1a","a4"])
+    assert Postgres.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: true,
+      percentage: 100,
+      users: ["1a","a4"]
+    }
+    Repo.delete_all(Feature)
+  end
+
+  test "get_feature returns get and formatted feature percentage only" do
+    Postgres.activate(Repo, "my_feature", 80)
+    assert Postgres.get_feature(Repo, "my_feature") == %{
+      name: "my_feature",
+      active: true,
+      percentage: 80,
+      users: []
+    }
+    Repo.delete_all(Feature)
+  end
 end

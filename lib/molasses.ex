@@ -26,55 +26,18 @@ defmodule Molasses do
     end
 
     def get_feature(client, key) do
-        case Redis.get(client, key) do
-            :undefined -> {:error, "failure"}
-            result -> 
-                [active, percentage, users] = String.split(result, "|")
-                %{
-                    name: key,
-                    active: return_bool(active),
-                    percentage: String.to_integer(percentage),
-                    users: convert_to_list(users),
-                }
-        end
+        Redis.get_feature(client,key)
     end
-
-    def convert_to_list(""), do: []
-    def convert_to_list(non_empty_string) do
-         non_empty_string 
-         |> String.split(",") 
-         |> Enum.map(fn (x) -> prepare_value(x) end)
-    end 
-
-    def prepare_value(x) do
-        y = try do
-            String.to_integer(x)
-        rescue 
-            _ -> x 
-        end
-        y
-    end
-    def return_bool("true"), do: true 
-    def return_bool("false"), do: false 
 
     def activate(client, key) do
-        Redis.set(client, key, "true|100|")
-    end
-
-    def activate(client, key, percentage) when is_integer(percentage) do
-        Redis.set(client, key, "true|#{percentage}|")
-    end
-
-    def activate(client, key, users) when is_list(users) do
-        activated_users = Enum.join(users,",")
-        Redis.set(client, key, "true|100|#{activated_users}")
+        Redis.activate(client,key)
     end
 
     def activate(client, key, group) do
-        Redis.set(client, key, "true|100|#{group}")
+        Redis.activate(client,key, group)
     end
 
     def deactivate(client, key) do
-        Redis.set(client, key, "false|0|")
+        Redis.deactivate(client,key)
     end
 end

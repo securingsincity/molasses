@@ -5,8 +5,6 @@ defmodule Molasses.StorageAdapter do
     
     
     @callback get(key) :: {:ok, term} | {:error, term}
-    
     @callback set(key, value) :: {:ok, term} | {:error, term}
-    
     @callback remove(key) :: {:ok, true} | {:error, false}
 end
