@@ -1,3 +1,4 @@
+if Code.ensure_loaded?(Ecto) do
 defmodule Molasses.StorageAdapter.Postgres do
     alias Molasses.Models.Feature
     alias Molasses.Util
@@ -90,4 +91,5 @@ defmodule Molasses.StorageAdapter.Postgres do
                 }
         end
     end
+end
 end
