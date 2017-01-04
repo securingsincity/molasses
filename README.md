@@ -53,7 +53,7 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
       config :molasses, adapter: "postgres" 
       ```
 
-
+      For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
     
 ## Usage
 
