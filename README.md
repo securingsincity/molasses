@@ -14,17 +14,9 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
       [{:molasses, "~> 0.2.0"}]
     end
     ```
-
-  2. Ensure `molasses` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:molasses]]
-    end
-    ```
-
-  3. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql. 
-    1. Redis
+  2. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql. 
+  
+  2A. Redis
 
       For Redis, you will just need to include exredis: 
       ```elixir
@@ -36,7 +28,7 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
         end
       ```
     
-    2. SQL using Ecto
+  2B. SQL using Ecto
 
 
       For Ecto with Postgres, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications : 
