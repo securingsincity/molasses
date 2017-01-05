@@ -16,44 +16,45 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
     ```
   2. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql. 
   
-  2A. Redis
+    2A. Redis
 
-      For Redis, you will just need to include exredis: 
-      ```elixir
-        def deps do
-          [
-            {:molasses, "~> 0.2.0"},
-            {:exredis, ">= 0.2.4"}
-          ]
-        end
-      ```
+    For Redis, you will just need to include `exredis`: 
+
+    ```elixir
+    def deps do
+      [
+        {:molasses, "~> 0.2.0"},
+        {:exredis, ">= 0.2.4"}
+      ]
+    end
+    ```
     
-  2B. SQL using Ecto
+    2B. SQL using Ecto
 
+    For Ecto with PostgreSQL, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications:
 
-      For Ecto with Postgres, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications : 
-      ```elixir
-        def deps do
-          [
-            {:molasses, "~> 0.2.0"},
-            {:ecto, "~> 2.1.1"},
-            {:postgrex, ">= 0.0.0"}
-          ]
-        end
+    ```elixir
+    def deps do
+      [
+        {:molasses, "~> 0.2.0"},
+        {:ecto, "~> 2.1.1"},
+        {:postgrex, ">= 0.0.0"}
+      ]
+    end
 
-        def application do
-          [applications: [:ecto, :postgrex]]
-        end
-      ```
+    def application do
+      [applications: [:ecto, :postgrex]]
+    end
+    ```
 
-      Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres. 
+    Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres. 
 
-      ```elixir
-      # molasses adapter setting
-      config :molasses, adapter: "postgres" 
-      ```
+    ```elixir
+    # molasses adapter setting
+    config :molasses, adapter: "postgres" 
+    ```
 
-      For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
+    For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
     
 ## Usage
 
