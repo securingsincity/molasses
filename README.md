@@ -120,7 +120,7 @@ Application.put_env(:molasses,:adapter, "ecto")
 alias Molasses.Test.Repo
 
 # use is_active and activate the same way but it uses the Ecto repo instead of 
-Molasses.activate(client, "my_feature", 75)
+Molasses.activate(Repo, "my_feature", 75)
 Molasses.is_active(Repo, "my_feature")
 ```
 
