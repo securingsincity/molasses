@@ -51,7 +51,7 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
 
     ```elixir
     # molasses adapter setting
-    config :molasses, adapter: "postgres" 
+    config :molasses, adapter: "ecto" 
     ```
 
     For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
