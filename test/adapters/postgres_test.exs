@@ -1,58 +1,58 @@
 defmodule Molasses.StorageAdapter.PostgresTest do
-    use ExUnit.Case
-    alias Molasses.StorageAdapter.Postgres
-    alias Molasses.Test.Repo
-    alias Molasses.Models.Feature
-    setup do
-        Application.put_env(:molasses,:adapter, "ecto")
-    end
-    
-    test "get should return the value" do
-        Repo.insert!(%Feature{name: "foo", percentage: 90})
-        %Feature{name: name, percentage: percent} = Postgres.get(Repo, "foo")
-        assert percent == 90
-        assert name == "foo"
-        Repo.delete_all(Feature)
-    end
-    test "get should return undefined" do
+  use ExUnit.Case
+  alias Molasses.StorageAdapter.Postgres
+  alias Molasses.Test.Repo
+  alias Molasses.Models.Feature
+  setup do
+    Application.put_env(:molasses,:adapter, "ecto")
+  end
 
-       Repo.insert!(%Feature{name: "baz", percentage: 90})
-       result = Postgres.get(Repo, "foo")
-       refute result
-       Repo.delete_all(Feature)
-    end
-    
-   test "set should return the feature and create it if its not there" do
-      
-       assert Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
-       %Feature{name: name, percentage: percent, users: users} = Postgres.get(Repo, "foo")
-       assert percent == 80
-       assert name == "foo"
-       assert users == "bar,baz"
-       Repo.delete_all(Feature)
-   end
-    
-    
-   test "set should return the updated feature and update it in the database" do
-      
-       Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
-       Postgres.set Repo, "foo", %{percentage: 70, users: "bar,cat"}
-       %Feature{name: name, percentage: percent, users: users} = Postgres.get(Repo, "foo")
-       assert percent == 70
-       assert name == "foo"
-       assert users == "bar,cat"
-       Repo.delete_all(Feature)
-   end
-    
-   test "remove should remove the value from the database" do
-       Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
-       Postgres.remove Repo, "foo"
-       assert Postgres.get(Repo, "foo") == nil
-       Repo.delete_all(Feature)
-   end
+  test "get should return the value" do
+    Repo.insert!(%Feature{name: "foo", percentage: 90})
+    %Feature{name: name, percentage: percent} = Postgres.get(Repo, "foo")
+    assert percent == 90
+    assert name == "foo"
+    Repo.delete_all(Feature)
+  end
+  test "get should return undefined" do
+
+    Repo.insert!(%Feature{name: "baz", percentage: 90})
+    result = Postgres.get(Repo, "foo")
+    refute result
+    Repo.delete_all(Feature)
+  end
+
+  test "set should return the feature and create it if its not there" do
+
+    assert Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
+    %Feature{name: name, percentage: percent, users: users} = Postgres.get(Repo, "foo")
+    assert percent == 80
+    assert name == "foo"
+    assert users == "bar,baz"
+    Repo.delete_all(Feature)
+  end
 
 
-   test "activate/2 sets key to 100% and sets to active" do
+  test "set should return the updated feature and update it in the database" do
+
+    Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
+    Postgres.set Repo, "foo", %{percentage: 70, users: "bar,cat"}
+    %Feature{name: name, percentage: percent, users: users} = Postgres.get(Repo, "foo")
+    assert percent == 70
+    assert name == "foo"
+    assert users == "bar,cat"
+    Repo.delete_all(Feature)
+  end
+
+  test "remove should remove the value from the database" do
+    Postgres.set Repo, "foo", %{percentage: 80, users: "bar,baz"}
+    Postgres.remove Repo, "foo"
+    assert Postgres.get(Repo, "foo") == nil
+    Repo.delete_all(Feature)
+  end
+
+
+  test "activate/2 sets key to 100% and sets to active" do
     Postgres.activate(Repo, "my_feature")
     %Feature{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
     assert name == "my_feature"
@@ -62,7 +62,7 @@ defmodule Molasses.StorageAdapter.PostgresTest do
   end
 
 
-   test "activate/2 sets key to 100% and sets to active with molasses" do
+  test "activate/2 sets key to 100% and sets to active with molasses" do
     Molasses.activate(Repo, "my_feature")
     %Feature{active: active, name: name, percentage: percent} = Postgres.get(Repo, "my_feature")
     assert name == "my_feature"
@@ -99,7 +99,7 @@ defmodule Molasses.StorageAdapter.PostgresTest do
     assert active == true
     Repo.delete_all(Feature)
   end
-  
+
   test "deactivate/2 sets key to 0% and sets to inactive" do
     Postgres.deactivate(Repo, "my_feature")
     %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
@@ -111,7 +111,7 @@ defmodule Molasses.StorageAdapter.PostgresTest do
   end
 
 
-test "activate/3 with string sets key and activates for a group using molasses" do
+  test "activate/3 with string sets key and activates for a group using molasses" do
     Molasses.activate(Repo, "my_feature", "admin")
     %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
     assert name == "my_feature"
@@ -120,7 +120,7 @@ test "activate/3 with string sets key and activates for a group using molasses" 
     assert active == true
     Repo.delete_all(Feature)
   end
-  
+
   test "deactivate/2 sets key to 0% and sets to inactiveusing molasses " do
     Molasses.deactivate(Repo, "my_feature")
     %{active: active, name: name, percentage: percent, users: users} = Postgres.get(Repo, "my_feature")
@@ -131,8 +131,8 @@ test "activate/3 with string sets key and activates for a group using molasses" 
     Repo.delete_all(Feature)
   end
 
-   test "get_feature returns get and formatted feature" do
-    
+  test "get_feature returns get and formatted feature" do
+
     Postgres.activate(Repo, "my_feature", "admin")
     assert Postgres.get_feature(Repo, "my_feature") == %{
       name: "my_feature",

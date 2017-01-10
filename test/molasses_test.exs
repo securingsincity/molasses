@@ -133,7 +133,7 @@ defmodule MolassesTest do
     Molasses.activate(client, "my_feature", 80)
 
     result = Enum.filter(1..100, fn x ->
-        Molasses.is_active(client, "my_feature", x)
+      Molasses.is_active(client, "my_feature", x)
     end)
     assert length(result) >= 79    
     assert length(result) <= 81    

@@ -1,6 +1,6 @@
 defmodule Molasses do
-    alias Molasses.StorageAdapter.Redis
-    alias Molasses.StorageAdapter.Postgres
+  alias Molasses.StorageAdapter.Redis
+  alias Molasses.StorageAdapter.Postgres
     @moduledoc ~S"""
 
 A feature toggle library using redis or SQL (using Ecto) as a backing service. It allows you to roll out to users based on a percentage. Alternatively, you can use Molasses to deploy to a group of users or user ids. 
@@ -50,7 +50,7 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
 
       ```elixir
       # molasses adapter setting
-      config :molasses, adapter: "postgres" 
+      config :molasses, adapter: "ecto" 
       ```
 
 
@@ -59,59 +59,59 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
 
 Molasses uses the same interface whether you are using Redis or SQL. Each function takes an `Ecto.Repo` or the `ExRedis` client as the first argument. 
 
-    """
+"""
 
     @doc """
     Check to see if a feature is active for all users.
     """
     def is_active(client, key) do
-        case get_feature(client, key) do
-            {:error, _} -> false
-            %{active: false} -> false
-            %{active: true,percentage: 100, users: []} -> true
-            %{active: true,percentage: 100} -> false
-            %{active: true,percentage: _} -> false  
-        end
+      case get_feature(client, key) do
+        {:error, _} -> false
+        %{active: false} -> false
+        %{active: true,percentage: 100, users: []} -> true
+        %{active: true,percentage: 100} -> false
+        %{active: true,percentage: _} -> false  
+      end
     end
     
     @doc """
     Check to see if a feature is active for a specific user.
     """
     def is_active(client, key, id)  do
-        case get_feature(client, key) do
-            {:error, _} -> false
-            %{active: false} -> false
-            %{active: true,percentage: 100, users: []} -> true
-            %{active: true,percentage: 100, users: users} -> Enum.member?(users, id)
-            %{active: true,percentage: percentage} when is_integer(id) ->
-                value = Integer.to_string(id) |> :erlang.crc32 |> rem(100) |> abs
-                value <= percentage
-            %{active: true,percentage: percentage} when is_bitstring(id) ->
-                value = id |> :erlang.crc32 |> rem(100) |> abs
-                value <= percentage
-        end
+      case get_feature(client, key) do
+        {:error, _} -> false
+        %{active: false} -> false
+        %{active: true,percentage: 100, users: []} -> true
+        %{active: true,percentage: 100, users: users} -> Enum.member?(users, id)
+        %{active: true,percentage: percentage} when is_integer(id) ->
+          value = id |> Integer.to_string |> :erlang.crc32 |> rem(100) |> abs
+          value <= percentage
+        %{active: true,percentage: percentage} when is_bitstring(id) ->
+          value = id |> :erlang.crc32 |> rem(100) |> abs
+          value <= percentage
+      end
     end
-    
+        
     @doc """
     Returns a struct of the feature in question. 
     """
     def get_feature(client, key) do
-        case Application.get_env(:molasses, :adapter) do
-             "ecto" -> Postgres.get_feature(client,key)
-              _ ->  Redis.get_feature(client,key)
-        end
-    end
+      case Application.get_env(:molasses, :adapter) do
+       "ecto" -> Postgres.get_feature(client,key)
+       _ ->  Redis.get_feature(client,key)
+     end
+   end
 
     @doc """
     Activates a feature for all users.
     """
     def activate(client, key) do
-        case Application.get_env(:molasses, :adapter) do
-             "ecto" -> Postgres.activate(client,key)
-              _ ->  Redis.activate(client,key)
-        end
-    end
-    
+      case Application.get_env(:molasses, :adapter) do
+       "ecto" -> Postgres.activate(client,key)
+       _ ->  Redis.activate(client,key)
+     end
+   end
+   
     @doc """
     Activates a feature for some users.
     When the group argument is an integer then it sets the feature active for a percentage of users. 
@@ -120,32 +120,32 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
     
     ## Examples
 
-        # activate a feature for a percentage of users
-        Molasses.activate(client, "my_feature", 75)
+    # activate a feature for a percentage of users
+    Molasses.activate(client, "my_feature", 75)
 
-        # activate a feature for a subset of integer based userIds 
-        Molasses.activate(client, "my_feature", [2, 4, 5])
+    # activate a feature for a subset of integer based userIds 
+    Molasses.activate(client, "my_feature", [2, 4, 5])
 
-        # activate a feature for a subset of string based userIds (think a mongoId) or a list of groups
-        Molasses.activate(client, "my_feature", ["admins", "super admins"])
+    # activate a feature for a subset of string based userIds (think a mongoId) or a list of groups
+    Molasses.activate(client, "my_feature", ["admins", "super admins"])
 
-        # activate a feature for only one group of users
-        Molasses.activate(client, "my_feature", "powerusers")
+    # activate a feature for only one group of users
+    Molasses.activate(client, "my_feature", "powerusers")
     """
     def activate(client, key, group) do
-        case Application.get_env(:molasses, :adapter) do
-             "ecto" -> Postgres.activate(client,key, group)
-              _ ->  Redis.activate(client,key, group)
-        end
+      case Application.get_env(:molasses, :adapter) do
+        "ecto" -> Postgres.activate(client,key, group)
+        _ ->  Redis.activate(client,key, group)
+      end
     end
 
     @doc """
     Dectivates a feature for all users. 
     """
     def deactivate(client, key) do
-        case Application.get_env(:molasses, :adapter) do
-             "ecto" -> Postgres.deactivate(client,key)
-              _ ->  Redis.deactivate(client,key)
-        end
-    end
-end
+      case Application.get_env(:molasses, :adapter) do
+       "ecto" -> Postgres.deactivate(client,key)
+       _ ->  Redis.deactivate(client,key)
+     end
+   end
+ end

@@ -3,7 +3,7 @@ defmodule Molasses.Mixfile do
 
   def project do
     [app: :molasses,
-     version: "0.2.1",
+     version: "0.2.2",
      elixir: "~> 1.3",
      description: description,
      package: package,
@@ -18,7 +18,7 @@ defmodule Molasses.Mixfile do
 
 
   def application_env(:test) do
-    [ :ecto, :postgrex] ++ application_env(:prod)
+    [:ecto, :postgrex] ++ application_env(:prod)
   end
 
   def application_env(_) do
@@ -26,10 +26,10 @@ defmodule Molasses.Mixfile do
   end
 
   defp package do
-    [ files: [ "lib", "mix.exs", "README.md", "LICENSE" ],
-      maintainers: [ "James Hrisho" ],
-      licenses: [ "MIT" ],
-      links: %{ "GitHub" => "https://github.com/securingsincity/molasses" } ]
+    [files: ["lib", "mix.exs", "README.md", "LICENSE"],
+      maintainers: ["James Hrisho"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/securingsincity/molasses"}]
   end
 
   defp description do
@@ -45,6 +45,7 @@ defmodule Molasses.Mixfile do
       {:postgrex, ">= 0.0.0", optional: true},
       {:excoveralls, "~> 0.5", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev},
+      {:credo, ">= 0.0.0", only: :dev},
       {:mix_test_watch, "~> 0.2", only: :dev}
     ]
   end
