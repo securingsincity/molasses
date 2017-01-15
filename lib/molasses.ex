@@ -96,22 +96,16 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
     Returns a struct of the feature in question. 
     """
     def get_feature(client, key) do
-      case Application.get_env(:molasses, :adapter) do
-       "ecto" -> Postgres.get_feature(client,key)
-       _ ->  Redis.get_feature(client,key)
-     end
-   end
+      adapter.get_feature(client,key)
+    end
 
     @doc """
     Activates a feature for all users.
     """
     def activate(client, key) do
-      case Application.get_env(:molasses, :adapter) do
-       "ecto" -> Postgres.activate(client,key)
-       _ ->  Redis.activate(client,key)
-     end
-   end
-   
+      adapter.activate(client,key)
+    end
+
     @doc """
     Activates a feature for some users.
     When the group argument is an integer then it sets the feature active for a percentage of users. 
@@ -133,19 +127,20 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
     Molasses.activate(client, "my_feature", "powerusers")
     """
     def activate(client, key, group) do
-      case Application.get_env(:molasses, :adapter) do
-        "ecto" -> Postgres.activate(client,key, group)
-        _ ->  Redis.activate(client,key, group)
-      end
+      adapter.activate(client, key, group)
     end
 
     @doc """
     Dectivates a feature for all users. 
     """
     def deactivate(client, key) do
+      adapter.deactivate(client, key)
+    end
+
+    def adapter do
       case Application.get_env(:molasses, :adapter) do
-       "ecto" -> Postgres.deactivate(client,key)
-       _ ->  Redis.deactivate(client,key)
-     end
-   end
+       "ecto" -> Postgres
+       _      ->  Redis
+      end
+    end
  end
