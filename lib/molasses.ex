@@ -3,7 +3,7 @@ defmodule Molasses do
   alias Molasses.StorageAdapter.Postgres
     @moduledoc ~S"""
 
-A feature toggle library using redis or SQL (using Ecto) as a backing service. It allows you to roll out to users based on a percentage. Alternatively, you can use Molasses to deploy to a group of users or user ids. 
+A feature toggle library using redis or SQL (using Ecto) as a backing service. It allows you to roll out to users based on a percentage. Alternatively, you can use Molasses to deploy to a group of users or user ids.
 
 ## Installation
 
@@ -14,11 +14,11 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
       [{:molasses, "~> 0.2.0"}]
     end
     ```
-  2. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql. 
-    
+  2. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql.
+
   2A. Redis
 
-      For Redis, you will just need to include exredis: 
+      For Redis, you will just need to include exredis:
       ```elixir
         def deps do
           [
@@ -27,11 +27,11 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
           ]
         end
       ```
-    
+
   2B. SQL using Ecto
 
 
-      For Ecto with Postgres, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications : 
+      For Ecto with Postgres, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications :
       ```elixir
         def deps do
           [
@@ -46,18 +46,18 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
         end
       ```
 
-      Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres. 
+      Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres.
 
       ```elixir
       # molasses adapter setting
-      config :molasses, adapter: "ecto" 
+      config :molasses, adapter: "ecto"
       ```
 
 
-    
+
 ## Usage
 
-Molasses uses the same interface whether you are using Redis or SQL. Each function takes an `Ecto.Repo` or the `ExRedis` client as the first argument. 
+Molasses uses the same interface whether you are using Redis or SQL. Each function takes an `Ecto.Repo` or the `ExRedis` client as the first argument.
 
 """
 
@@ -70,10 +70,10 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
         %{active: false} -> false
         %{active: true,percentage: 100, users: []} -> true
         %{active: true,percentage: 100} -> false
-        %{active: true,percentage: _} -> false  
+        %{active: true,percentage: _} -> false
       end
     end
-    
+
     @doc """
     Check to see if a feature is active for a specific user.
     """
@@ -91,9 +91,9 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
           value <= percentage
       end
     end
-        
+
     @doc """
-    Returns a struct of the feature in question. 
+    Returns a struct of the feature in question.
     """
     def get_feature(client, key) do
       adapter.get_feature(client,key)
@@ -108,16 +108,16 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
 
     @doc """
     Activates a feature for some users.
-    When the group argument is an integer then it sets the feature active for a percentage of users. 
+    When the group argument is an integer then it sets the feature active for a percentage of users.
     When the group argument is a string then it sets a feature active for that specific user or user group.
     When the group argument is a list then it sets a feature active for that specific list of users or user groups
-    
+
     ## Examples
 
     # activate a feature for a percentage of users
     Molasses.activate(client, "my_feature", 75)
 
-    # activate a feature for a subset of integer based userIds 
+    # activate a feature for a subset of integer based userIds
     Molasses.activate(client, "my_feature", [2, 4, 5])
 
     # activate a feature for a subset of string based userIds (think a mongoId) or a list of groups
@@ -131,7 +131,7 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
     end
 
     @doc """
-    Dectivates a feature for all users. 
+    Dectivates a feature for all users.
     """
     def deactivate(client, key) do
       adapter.deactivate(client, key)
