@@ -39,7 +39,7 @@ defmodule Molasses.StorageAdapter.Redis do
   def get_feature(client, key) do
     case get(client, key) do
       :undefined -> {:error, "failure"}
-      result -> 
+      result ->
         [active, percentage, users] = String.split(result, "|")
         %{
           name: key,

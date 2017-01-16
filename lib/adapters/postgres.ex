@@ -20,7 +20,7 @@ if Code.ensure_loaded?(Ecto) do
         result ->
           result = Feature.changeset(result,value)
           repo.update!(result)
-      end          
+      end
     end
 
     def remove(repo, key) do
@@ -34,7 +34,7 @@ if Code.ensure_loaded?(Ecto) do
 
     def activate(client, key) do
       set(client, key, %{
-        name: key, 
+        name: key,
         active: true,
         percentage: 100,
         users: ""
@@ -43,7 +43,7 @@ if Code.ensure_loaded?(Ecto) do
 
     def activate(client, key, percentage) when is_integer(percentage) do
       set(client, key, %{
-        name: key, 
+        name: key,
         active: true,
         percentage: percentage,
         users: ""
@@ -53,7 +53,7 @@ if Code.ensure_loaded?(Ecto) do
     def activate(client, key, users) when is_list(users) do
       activated_users = Enum.join(users,",")
       set(client, key, %{
-        name: key, 
+        name: key,
         percentage: 100,
         active: true,
         users: activated_users
@@ -62,7 +62,7 @@ if Code.ensure_loaded?(Ecto) do
 
     def activate(client, key, group) do
       set(client, key, %{
-        name: key, 
+        name: key,
         percentage: 100,
         users: group,
         active: true
@@ -71,7 +71,7 @@ if Code.ensure_loaded?(Ecto) do
 
     def deactivate(client, key) do
       set(client, key, %{
-        name: key, 
+        name: key,
         active: false,
         percentage: 0,
         users: ""
@@ -84,7 +84,7 @@ if Code.ensure_loaded?(Ecto) do
     def get_feature(repo, key) do
       case get(repo, key) do
         nil -> {:error, "failure"}
-        %{name: key, active: active, percentage: percentage, users: users} -> 
+        %{name: key, active: active, percentage: percentage, users: users} ->
           %{
             name: key,
             active: active,
