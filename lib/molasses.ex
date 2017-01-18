@@ -1,6 +1,7 @@
 defmodule Molasses do
   alias Molasses.StorageAdapter.Redis
   alias Molasses.StorageAdapter.Postgres
+  alias Molasses.StorageAdapter.MongoDB
     @moduledoc ~S"""
 
 A feature toggle library using redis or SQL (using Ecto) as a backing service. It allows you to roll out to users based on a percentage. Alternatively, you can use Molasses to deploy to a group of users or user ids.
@@ -140,6 +141,7 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
     def adapter do
       case Application.get_env(:molasses, :adapter) do
        "ecto" -> Postgres
+       "mongo" -> MongoDB
        _      ->  Redis
       end
     end
