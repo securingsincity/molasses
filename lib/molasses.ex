@@ -15,7 +15,7 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
       [{:molasses, "~> 0.2.0"}]
     end
     ```
-  2. Install related dependencies by including `ExRedis` or `Ecto` and one of its adapter libraries for Postgres or Mysql.
+  2. Install related dependencies by including `ExRedis`, `MongoDB` or `Ecto` and one of its adapter libraries for Postgres or Mysql.
 
   2A. Redis
 
@@ -52,6 +52,37 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
       ```elixir
       # molasses adapter setting
       config :molasses, adapter: "ecto"
+      ```
+
+      You will need to create an ecto migration and add the features tables.
+
+      ```elixir
+
+          defmodule Repo.CreateTestMocks do
+            use Ecto.Migration
+
+            def change do
+              create table(:features) do
+                add :name, :string
+                add :percentage, :integer
+                add :users, :string
+                add :active, :boolean
+              end
+
+              create index(:features, [:name])
+            end
+          end
+      ```
+
+      2C. MongoDB
+
+      ```elixir
+      def deps do
+        [
+          {:molasses, "~> 0.2.0"},
+          {:mongodb, ">= 0.0.0"},
+        ]
+      end
       ```
 
 
