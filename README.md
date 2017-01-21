@@ -53,7 +53,26 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
     # molasses adapter setting
     config :molasses, adapter: "ecto" 
     ```
+  
+    You will need to create an ecto migration and add the features tables. 
+    
+    ```elixir
+    
+        defmodule Repo.CreateTestMocks do
+          use Ecto.Migration
 
+          def change do
+            create table(:features) do
+              add :name, :string
+              add :percentage, :integer
+              add :users, :string
+              add :active, :boolean
+            end
+            
+            create index(:features, [:name])
+          end
+        end
+     ```
     For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
     
 ## Usage
