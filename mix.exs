@@ -3,7 +3,7 @@ defmodule Molasses.Mixfile do
 
   def project do
     [app: :molasses,
-     version: "0.3.0",
+     version: "0.3.1",
      elixir: "~> 1.3",
      description: description,
      package: package,
@@ -40,10 +40,12 @@ defmodule Molasses.Mixfile do
 
   defp deps do
     [
+      # optional deps
       {:ecto, "~> 2.1.1", optional: true},
       {:exredis, ">= 0.2.4", optional: true},
       {:postgrex, ">= 0.0.0", optional: true},
-      {:mongodb, ">= 0.0.0", only: :test},
+      {:mongodb, ">= 0.0.0", optional: true},
+      #test and dev
       {:excoveralls, "~> 0.5", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:credo, ">= 0.0.0", only: :dev},

@@ -3,7 +3,6 @@ if Code.ensure_loaded?(Ecto) do
     @moduledoc """
       Defines the ecto model that makes up a feature.
     """
-    import Ecto
     import Ecto.Changeset
     use Ecto.Schema
     schema "features" do
