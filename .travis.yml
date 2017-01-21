@@ -1,7 +1,8 @@
 language: elixir
-services: 
+services:
   - postgresql
   - redis
+  - mongodb
 elixir:
   - 1.3.4
 env:

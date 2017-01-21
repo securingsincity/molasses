@@ -18,7 +18,7 @@ defmodule Molasses.Mixfile do
 
 
   def application_env(:test) do
-    [:ecto, :postgrex] ++ application_env(:prod)
+    [:ecto, :postgrex, :mongodb] ++ application_env(:prod)
   end
 
   def application_env(_) do
@@ -43,6 +43,7 @@ defmodule Molasses.Mixfile do
       {:ecto, "~> 2.1.1", optional: true},
       {:exredis, ">= 0.2.4", optional: true},
       {:postgrex, ">= 0.0.0", optional: true},
+      {:mongodb, ">= 0.0.0", only: :test},
       {:excoveralls, "~> 0.5", only: :test},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:credo, ">= 0.0.0", only: :dev},
