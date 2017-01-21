@@ -5,6 +5,12 @@ if Code.ensure_loaded?(Ecto) do
     """
     alias Molasses.Models.Feature
     alias Molasses.Util
+    import Ecto.Query
+
+    def get_features(repo) do
+      repo.all(from feature in Feature, select: feature)
+    end
+
     def get(repo, key) do
       case repo.get_by(Feature, %{name: key}) do
         nil -> nil

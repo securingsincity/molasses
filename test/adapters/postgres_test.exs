@@ -7,6 +7,17 @@ defmodule Molasses.StorageAdapter.PostgresTest do
     Application.put_env(:molasses,:adapter, "ecto")
   end
 
+  test "get_all should return all features" do
+    Molasses.activate(Repo, "my_feature", "admin")
+    Molasses.activate(Repo, "another_test")
+    [feature1, feature2] = Postgres.get_features(Repo)
+    assert feature1.name == "my_feature"
+    assert feature2.name == "another_test"
+    assert feature1.users == "admin"
+    Repo.delete_all(Feature)
+  end
+
+
   test "get should return the value" do
     Repo.insert!(%Feature{name: "foo", percentage: 90})
     %Feature{name: name, percentage: percent} = Postgres.get(Repo, "foo")

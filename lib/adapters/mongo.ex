@@ -3,6 +3,12 @@ defmodule Molasses.StorageAdapter.MongoDB do
     Storage Adapter for mongodb for use in molasses
     """
   alias Molasses.Util
+
+  def get_features(client) do
+    cursor = Mongo.find(client, "feature_toggles", %{})
+    Enum.to_list(cursor)
+  end
+
   def get(client, key) do
     cursor = Mongo.find(client, "feature_toggles", %{name: key})
     case Enum.at(cursor,0) do

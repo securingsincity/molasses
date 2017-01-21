@@ -7,6 +7,17 @@ defmodule MolassesTest do
     Application.put_env(:molasses,:adapter, "redis")
   end
 
+  test "get_features/1 gets all features" do
+    {:ok, conn} = Exredis.start_link
+    Exredis.Api.flushall  conn
+    Molasses.activate(conn, "my_feature", "admin")
+    Molasses.activate(conn, "another_test")
+    [feature1, feature2] = Molasses.get_features(conn)
+    assert feature1[:name] == "my_feature"
+    assert feature2[:name] == "another_test"
+    assert feature1[:users] == ["admin"]
+  end
+
   test "activate/2 sets key to 100% and sets to active" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, "my_feature")
@@ -30,7 +41,7 @@ defmodule MolassesTest do
     Molasses.activate(client, "my_feature", :admin)
     assert Exredis.Api.get(client, "molasses_my_feature") == "true|100|admin"
   end
-  
+
   test "deactivate/2 sets key to 0% and sets to inactive" do
     {:ok, client} = Exredis.start_link
     Molasses.deactivate(client, "my_feature")
@@ -101,7 +112,7 @@ defmodule MolassesTest do
   test "is_active/2 with valid key that is active and 80% then return false" do
     {:ok, client} = Exredis.start_link
     Molasses.activate(client, "my_feature", 80)
-    assert !Molasses.is_active(client, "my_feature")    
+    assert !Molasses.is_active(client, "my_feature")
   end
 
   test "is_active/2 with valid key that is deactive return false" do
@@ -135,8 +146,8 @@ defmodule MolassesTest do
     result = Enum.filter(1..100, fn x ->
       Molasses.is_active(client, "my_feature", x)
     end)
-    assert length(result) >= 79    
-    assert length(result) <= 81    
+    assert length(result) >= 79
+    assert length(result) <= 81
   end
 
   test "is_active/3 with string id  with valid key that is active and 80% then return false" do
@@ -144,7 +155,7 @@ defmodule MolassesTest do
     Molasses.activate(client, "my_feature", 90)
 
     assert Molasses.is_active(client, "my_feature", "james")
-    refute Molasses.is_active(client, "my_feature", "ZZZZ") # ""ZZZZ" equates to a 96 value in this case 
+    refute Molasses.is_active(client, "my_feature", "ZZZZ") # ""ZZZZ" equates to a 96 value in this case
   end
 
   test "is_active/3 with integer  with valid key that is deactive return false" do

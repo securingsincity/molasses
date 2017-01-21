@@ -9,6 +9,17 @@ defmodule Molasses.StorageAdapter.MongoTest do
     Application.put_env(:molasses,:database, "molasses_test")
   end
 
+  test "get_all should return all features" do
+    {:ok, conn} = Mongo.start_link(database: "molasses_test")
+    MongoDB.activate(conn, "my_feature", "admin")
+    MongoDB.activate(conn, "another_test")
+    [feature1, feature2] = MongoDB.get_features(conn)
+    assert feature1["name"] == "my_feature"
+    assert feature2["name"] == "another_test"
+    assert feature1["users"] == "admin"
+    Mongo.delete_many(conn, "feature_toggles", %{})
+  end
+
   test "get should return the value" do
     {:ok, conn} = Mongo.start_link(database: "molasses_test")
     Mongo.update_one(conn, "feature_toggles",

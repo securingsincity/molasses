@@ -7,9 +7,20 @@ defmodule Molasses.StorageAdapter.RedisTest do
   setup do
     Application.put_env(:molasses,:adapter, "redis")
   end
-  
+
+ test "get_all should return all features" do
+    {:ok, conn} = Exredis.start_link
+    Exredis.Api.flushall  conn
+    Redis.activate(conn, "my_feature", "admin")
+    Redis.activate(conn, "another_test")
+    [feature1, feature2] = Redis.get_features(conn)
+    assert feature1[:name] == "my_feature"
+    assert feature2[:name] == "another_test"
+    assert feature1[:users] == ["admin"]
+  end
+
   test "get should return the value" do
-    
+
     {:ok, client} = Exredis.start_link
     set(client, "molasses_foo", "value")
     assert Exredis.Api.get client, "molasses_foo" === "value"
@@ -24,17 +35,17 @@ defmodule Molasses.StorageAdapter.RedisTest do
     assert Exredis.Api.get( client, "molasses_foo") === "value"
     assert :undefined == Redis.get( client, "var")
   end
-  
+
   test "set should return the value and ok if its in the database" do
-    
+
     {:ok, client} = Exredis.start_link
     assert Redis.set client, "foo", "value"
     assert Exredis.Api.get( client, "molasses_foo") === "value"
 
   end
-  
+
   test "remove should remove the value from the database" do
-    
+
     {:ok, client} = Exredis.start_link
     assert Redis.set client, "foo", "value"
     assert Redis.remove client, "foo"

@@ -169,6 +169,11 @@ Molasses uses the same interface whether you are using Redis or SQL. Each functi
       adapter.deactivate(client, key)
     end
 
+    def get_features(client) do
+      adapter.get_features(client)
+    end
+
+
     def adapter do
       case Application.get_env(:molasses, :adapter) do
        "ecto" -> Postgres
