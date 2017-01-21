@@ -13,10 +13,8 @@ defmodule Molasses.StorageAdapter.RedisTest do
     Exredis.Api.flushall  conn
     Redis.activate(conn, "my_feature", "admin")
     Redis.activate(conn, "another_test")
-    [feature1, feature2] = Redis.get_features(conn)
-    assert feature1[:name] == "my_feature"
-    assert feature2[:name] == "another_test"
-    assert feature1[:users] == ["admin"]
+    features = Molasses.get_features(conn)
+    assert Enum.count(features) == 2
   end
 
   test "get should return the value" do

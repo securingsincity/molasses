@@ -12,10 +12,8 @@ defmodule MolassesTest do
     Exredis.Api.flushall  conn
     Molasses.activate(conn, "my_feature", "admin")
     Molasses.activate(conn, "another_test")
-    [feature1, feature2] = Molasses.get_features(conn)
-    assert feature1[:name] == "my_feature"
-    assert feature2[:name] == "another_test"
-    assert feature1[:users] == ["admin"]
+    features = Molasses.get_features(conn)
+    assert Enum.count(features) == 2
   end
 
   test "activate/2 sets key to 100% and sets to active" do
