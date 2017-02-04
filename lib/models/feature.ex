@@ -1,7 +1,7 @@
 if Code.ensure_loaded?(Ecto) do
   defmodule Molasses.Models.Feature do
     @moduledoc """
-      Defines the ecto model that makes up a feature.
+    Defines the ecto model that makes up a feature.
     """
     import Ecto.Changeset
     use Ecto.Schema

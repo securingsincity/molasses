@@ -4,6 +4,10 @@ if Code.ensure_loaded?(Exredis) do
       Storage Adapter for redis for use in molasses
       """
     alias Molasses.Util
+    def create_client do
+      {:ok, conn} = Exredis.start_link
+      conn
+    end
 
     def get_features(client) do
       keys = Exredis.Api.keys "molasses_*"

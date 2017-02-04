@@ -6,7 +6,9 @@ if Code.ensure_loaded?(Ecto) do
     alias Molasses.Models.Feature
     alias Molasses.Util
     import Ecto.Query
-
+    def create_client do
+      Application.get_env(:molasses, :repo)
+    end
     def get_features(repo) do
       repo.all(from feature in Feature, select: feature)
     end
@@ -83,9 +85,6 @@ if Code.ensure_loaded?(Ecto) do
         users: ""
         })
     end
-
-
-
 
     def get_feature(repo, key) do
       case get(repo, key) do
