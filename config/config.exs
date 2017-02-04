@@ -17,3 +17,4 @@ config :molasses, Molasses.Test.Repo,
 if Mix.env == :test do
   config :logger, level: :warn
 end
+import_config "#{Mix.env}.exs"
