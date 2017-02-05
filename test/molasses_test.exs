@@ -107,8 +107,10 @@ defmodule MolassesTest do
     Molasses.activate(client, "my_feature")
     Molasses.deactivate(client, "my_other_feature")
     Molasses.activate(client, "my_third_feature", [2,4,7])
-    assert [%{name: "my_feature", active: true},%{name: "my_third_feature", active: true}, %{name: "my_other_feature", active: false},] == Molasses.are_features_active(client, 4)
-    assert [%{name: "my_feature", active: true},%{name: "my_third_feature", active: false}, %{name: "my_other_feature", active: false},] == Molasses.are_features_active(client, 5)
+    result_a = client |> Molasses.are_features_active(4) |> Enum.sort(fn(x,y) -> x[:name] < y[:name] end)
+    result_b = client |> Molasses.are_features_active(5) |> Enum.sort(fn(x,y) -> x[:name] < y[:name] end)
+    assert result_a == [%{name: "my_feature", active: true}, %{name: "my_other_feature", active: false}, %{name: "my_third_feature", active: true},]
+    assert result_b == [%{name: "my_feature", active: true},%{name: "my_other_feature", active: false}, %{name: "my_third_feature", active: false},]
   end
 
   test "is_active/2 with valid key that is active and 100% then return true" do
