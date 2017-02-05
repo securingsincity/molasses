@@ -11,10 +11,9 @@ if Code.ensure_loaded?(Exredis) do
 
     def get_features(client) do
       keys = Exredis.Api.keys "molasses_*"
-      Enum.map(keys, fn(x) ->
-        formatted = String.replace(x,"molasses_", "")
-        get_feature(client, formatted)
-      end)
+      keys
+      |> Enum.map(fn(x) -> String.replace(x,"molasses_", "") end)
+      |> Enum.map(fn(x) -> get_feature(client, x) end)
     end
     def get(client, key) do
       Exredis.Api.get client, "molasses_#{key}"

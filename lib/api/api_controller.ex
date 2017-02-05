@@ -106,5 +106,13 @@ if Code.ensure_loaded?(Phoenix) do
       |> put_status(200)
       |> json(%{active: is_active, name: name})
     end
+
+    def is_active(conn, %{"user_id" => user_id}) do
+      features = Molasses.are_features_active(repo, user_id)
+       conn
+      |> put_status(200)
+      |> json(features)
+
+    end
   end
 end

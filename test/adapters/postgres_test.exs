@@ -13,7 +13,7 @@ defmodule Molasses.StorageAdapter.PostgresTest do
     [feature1, feature2] = Postgres.get_features(Repo)
     assert feature1.name == "my_feature"
     assert feature2.name == "another_test"
-    assert feature1.users == "admin"
+    assert feature1.users == ["admin"]
     Repo.delete_all(Feature)
   end
 
@@ -171,7 +171,7 @@ defmodule Molasses.StorageAdapter.PostgresTest do
       name: "my_feature",
       active: true,
       percentage: 100,
-      users: [1,4]
+      users: ["1","4"]
     }
     Repo.delete_all(Feature)
   end

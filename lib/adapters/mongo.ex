@@ -11,7 +11,9 @@ if Code.ensure_loaded?(Mongo) do
 
     def get_features(client) do
       cursor = Mongo.find(client, "feature_toggles", %{})
-      Enum.to_list(cursor)
+      cursor
+      |> Enum.to_list
+      |> Enum.map(fn(x) -> format_feature(x) end)
     end
 
     def get(client, key) do
@@ -79,7 +81,12 @@ if Code.ensure_loaded?(Mongo) do
     end
 
     def get_feature(repo, key) do
-      case get(repo, key) do
+      feature = get(repo, key)
+      format_feature(feature)
+    end
+
+    def format_feature(feature) do
+      case feature do
         nil -> {:error, "failure"}
         %{"name"=> key, "active"=> active, "percentage"=> percentage, "users"=> users} ->
           %{
@@ -96,6 +103,6 @@ if Code.ensure_loaded?(Mongo) do
             users: [],
           }
         end
-      end        
+      end
     end
 end

@@ -14,9 +14,9 @@ defmodule Molasses.StorageAdapter.MongoTest do
     MongoDB.activate(conn, "my_feature", "admin")
     MongoDB.activate(conn, "another_test")
     [feature1, feature2] = MongoDB.get_features(conn)
-    assert feature1["name"] == "my_feature"
-    assert feature2["name"] == "another_test"
-    assert feature1["users"] == "admin"
+    assert feature1[:name] == "my_feature"
+    assert feature2[:name] == "another_test"
+    assert feature1[:users] == ["admin"]
     Mongo.delete_many(conn, "feature_toggles", %{})
   end
 
@@ -210,7 +210,7 @@ defmodule Molasses.StorageAdapter.MongoTest do
       name: "my_feature",
       active: true,
       percentage: 100,
-      users: [1,4]
+      users: ["1","4"]
     }
     Mongo.delete_many(conn, "feature_toggles", %{})
   end

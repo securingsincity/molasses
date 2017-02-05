@@ -75,7 +75,7 @@ defmodule MolassesTest do
       name: "my_feature",
       active: true,
       percentage: 100,
-      users: [1,4]
+      users: ["1","4"]
     }
   end
 
@@ -99,6 +99,16 @@ defmodule MolassesTest do
       percentage: 80,
       users: []
     }
+  end
+
+  test "are_features_active should return a map of active features" do
+    {:ok, client} = Exredis.start_link
+    Exredis.Api.flushall  client
+    Molasses.activate(client, "my_feature")
+    Molasses.deactivate(client, "my_other_feature")
+    Molasses.activate(client, "my_third_feature", [2,4,7])
+    assert [%{name: "my_feature", active: true},%{name: "my_third_feature", active: true}, %{name: "my_other_feature", active: false},] == Molasses.are_features_active(client, 4)
+    assert [%{name: "my_feature", active: true},%{name: "my_third_feature", active: false}, %{name: "my_other_feature", active: false},] == Molasses.are_features_active(client, 5)
   end
 
   test "is_active/2 with valid key that is active and 100% then return true" do

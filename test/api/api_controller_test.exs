@@ -137,7 +137,7 @@ defmodule Molasses.Api.ApiControllerTest do
     {:ok, client} = Exredis.start_link
     Exredis.Api.flushall  client
     Molasses.activate(client, "foo")
-    conn = get conn, api_path(conn, :is_active, "foo",42)
+    conn = post conn, api_path(conn, :is_active, "foo", %{"user_id"=> 42})
     body = json_response(conn, 200)
     assert body["active"] == true
     assert body["name"] == "foo"
@@ -147,10 +147,29 @@ defmodule Molasses.Api.ApiControllerTest do
     {:ok, client} = Exredis.start_link
     Exredis.Api.flushall  client
     Molasses.activate(client, "foo", "43,45")
-    conn = get conn, api_path(conn, :is_active, "foo", 42)
+    conn = post conn, api_path(conn, :is_active, "foo", %{"user_id"=> 42})
     body = json_response(conn, 200)
     assert body["active"] == false
     assert body["name"] == "foo"
+  end
+
+  test "api_path :is_active should return all features", %{conn: conn} do
+    {:ok, client} = Exredis.start_link
+    Exredis.Api.flushall  client
+    Molasses.activate(client, "foo", ["43", "45"])
+    Molasses.activate(client, "bar", ["43", "42"])
+    Molasses.activate(client, "baz")
+    Molasses.deactivate(client, "cat")
+    conn = post conn, api_path(conn, :is_active, %{"user_id" => "42"})
+    body = conn
+    |> json_response(200)
+    |> Enum.sort(fn(x,y) -> x["name"] < y["name"] end)
+
+    assert [
+    %{"name" => "bar", "active" => true},
+    %{"name" => "baz", "active" => true},
+    %{"name" => "cat", "active" => false},
+    %{"name" => "foo", "active" => false},] == body
   end
 
 end
