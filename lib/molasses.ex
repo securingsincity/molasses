@@ -105,25 +105,38 @@ defmodule Molasses do
       %{active: true,percentage: _} -> false
     end
   end
-
+  defp get_id(id) when is_integer(id), do: Integer.to_string(id)
+  defp get_id(id), do: id
   @doc """
   Check to see if a feature is active for a specific user.
   """
   def is_active(client, key, id)  do
-    case get_feature(client, key) do
+    feature = get_feature(client, key)
+    is_feature_active(feature,id)
+  end
+
+  defp is_feature_active(feature, id) do
+    id = get_id id
+    case feature do
       {:error, _} -> false
       %{active: false} -> false
       %{active: true,percentage: 100, users: []} -> true
       %{active: true,percentage: 100, users: users} -> Enum.member?(users, id)
-      %{active: true,percentage: percentage} when is_integer(id) ->
-        value = id |> Integer.to_string |> :erlang.crc32 |> rem(100) |> abs
-        value <= percentage
       %{active: true,percentage: percentage} when is_bitstring(id) ->
         value = id |> :erlang.crc32 |> rem(100) |> abs
         value <= percentage
     end
   end
 
+  def are_features_active(client, id) do
+    features = get_features(client)
+    Enum.map(features, fn(x) ->
+      %{
+        name: x[:name],
+        active: is_feature_active(x, id)
+      }
+    end)
+  end
   @doc """
   Returns a struct of the feature in question.
   """

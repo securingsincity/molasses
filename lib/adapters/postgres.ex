@@ -10,7 +10,7 @@ if Code.ensure_loaded?(Ecto) do
       Application.get_env(:molasses, :repo)
     end
     def get_features(repo) do
-      repo.all(from feature in Feature, select: feature)
+      repo.all(from feature in Feature, select: feature) |> Enum.map(fn(x) -> format_feature(x) end)
     end
 
     def get(repo, key) do
@@ -87,7 +87,13 @@ if Code.ensure_loaded?(Ecto) do
     end
 
     def get_feature(repo, key) do
-      case get(repo, key) do
+      feature = get(repo, key)
+      format_feature(feature)
+
+    end
+
+    def format_feature(feature) do
+      case feature do
         nil -> {:error, "failure"}
         %{name: key, active: active, percentage: percentage, users: users} ->
           %{

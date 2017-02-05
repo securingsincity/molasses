@@ -16,5 +16,8 @@ config :molasses, Molasses.Test.Repo,
 # Print only warnings and errors during test
 if Mix.env == :test do
   config :logger, level: :warn
+  config :molasses, Molasses.Test.Endpoint,
+    http: [port: 4001],
+    secret_key_base: "HL0pikQMxNSA58DV3mf26O/eh1e4vaJDmx1qLgqBcnS14gbKu9Xn3x114D+mHYcX",
+    server: false
 end
-import_config "#{Mix.env}.exs"
