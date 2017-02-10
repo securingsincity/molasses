@@ -1,0 +1,22 @@
+<h2>Features</h2>
+<table>
+  <thead>
+    <td>Name</td>
+    <td>Percentage</td>
+    <td>Users</td>
+    <td>Active</td>
+    <td>Details</td>
+  </thead>
+  <tbody><%= for feature <- @features do %>
+    <tr>
+      <td>
+        <strong><%= feature.name %></strong>
+      </td>
+      <td><%= feature.percentage %></td>
+      <td><%= feature.users %></td>
+      <td><%=  feature.active %></td>
+      <td><%= Phoenix.HTML.Link.link "Details", to: admin_panel_path(Molasses.Endpoint, :details, feature.name) %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -6,6 +6,7 @@ defmodule Molasses.Mixfile do
      version: "0.3.1",
      elixir: "~> 1.3",
      description: description,
+     compilers: [:phoenix] ++ Mix.compilers,
      package: package,
      test_coverage: [tool: ExCoveralls],
      preferred_cli_env: ["coveralls": :test, "coveralls.detail": :test, "coveralls.post": :test, "coveralls.html": :test],

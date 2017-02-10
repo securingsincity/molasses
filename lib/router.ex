@@ -17,5 +17,12 @@ if Code.ensure_loaded?(Phoenix) do
         get "/", Api.ApiController, :index
       end
     end
+
+    defmacro admin_panel_routes(_opts \\ []) do
+      quote do
+        get "/:name", AdminPanel.AdminPanelController, :details
+        get "/", AdminPanel.AdminPanelController, :dashboard
+      end
+    end
   end
 end
