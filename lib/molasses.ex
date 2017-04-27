@@ -141,14 +141,14 @@ defmodule Molasses do
   Returns a struct of the feature in question.
   """
   def get_feature(client, key) do
-    adapter.get_feature(client,key)
+    adapter().get_feature(client,key)
   end
 
   @doc """
   Activates a feature for all users.
   """
   def activate(client, key) do
-    adapter.activate(client,key)
+    adapter().activate(client,key)
   end
 
   @doc """
@@ -172,18 +172,18 @@ defmodule Molasses do
   Molasses.activate(client, "my_feature", "powerusers")
   """
   def activate(client, key, group) do
-    adapter.activate(client, key, group)
+    adapter().activate(client, key, group)
   end
 
   @doc """
   Dectivates a feature for all users.
   """
   def deactivate(client, key) do
-    adapter.deactivate(client, key)
+    adapter().deactivate(client, key)
   end
 
   def get_features(client) do
-    adapter.get_features(client)
+    adapter().get_features(client)
   end
 
 

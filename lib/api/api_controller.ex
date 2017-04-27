@@ -8,7 +8,7 @@ if Code.ensure_loaded?(Phoenix) do
     alias Molasses.StorageAdapter.MongoDB
 
     defp repo do
-      result = adapter.create_client
+      result = adapter().create_client
       result
     end
 
@@ -21,7 +21,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def index(conn, _) do
-      features = repo
+      features = repo()
       |> Molasses.get_features
       |> Enum.map(fn(x) -> Map.take(x, [:active, :percentage, :name, :users]) end)
 
@@ -31,7 +31,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def create(conn, %{"name" => name, "percentage" => percentage}) do
-      Molasses.activate(repo, name, percentage)
+      Molasses.activate(repo(), name, percentage)
 
       conn
       |> put_status(201)
@@ -39,7 +39,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def create(conn, %{"name" => name, "users" => users}) do
-      Molasses.activate(repo, name, users)
+      Molasses.activate(repo(), name, users)
 
       conn
       |> put_status(201)
@@ -47,7 +47,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def create(conn, %{"name"=> name}) do
-      Molasses.activate(repo, name)
+      Molasses.activate(repo(), name)
 
       conn
       |> put_status(201)
@@ -62,7 +62,7 @@ if Code.ensure_loaded?(Phoenix) do
 
 
     def update(conn,%{"name"=> name,"active" => false}) do
-      Molasses.deactivate(repo, name)
+      Molasses.deactivate(repo(), name)
 
       conn
       |> put_status(204)
@@ -70,7 +70,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def update(conn,%{"name"=> name,"active" => true}) do
-      Molasses.activate(repo, name)
+      Molasses.activate(repo(), name)
 
       conn
       |> put_status(204)
@@ -78,7 +78,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def update(conn, %{"name"=> name,"percentage" => percentage}) do
-      Molasses.activate(repo, name, percentage)
+      Molasses.activate(repo(), name, percentage)
 
       conn
       |> put_status(204)
@@ -86,7 +86,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def update(conn, %{"name"=> name, "users" => users}) do
-      Molasses.activate(repo, name, users)
+      Molasses.activate(repo(), name, users)
 
       conn
       |> put_status(204)
@@ -100,7 +100,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def is_active(conn, %{"name" => name, "user_id" => user_id}) do
-      is_active = Molasses.is_active(repo, name, user_id)
+      is_active = Molasses.is_active(repo(), name, user_id)
 
       conn
       |> put_status(200)
@@ -108,7 +108,7 @@ if Code.ensure_loaded?(Phoenix) do
     end
 
     def is_active(conn, %{"user_id" => user_id}) do
-      features = Molasses.are_features_active(repo, user_id)
+      features = Molasses.are_features_active(repo(), user_id)
        conn
       |> put_status(200)
       |> json(features)

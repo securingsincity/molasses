@@ -16,6 +16,6 @@ defmodule Molasses.Test.Router do
 
   scope "/", Molasses do
     pipe_through [:api]
-    api_routes
+    api_routes()
   end
 end
