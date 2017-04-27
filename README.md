@@ -9,83 +9,83 @@ A feature toggle library using redis or SQL (using Ecto) as a backing service. I
 
   1. Add `molasses` to your list of dependencies in `mix.exs` and run `mix deps.get`:
 
-    ```elixir
-    def deps do
-      [{:molasses, "~> 0.2.0"}]
-    end
-    ```
+  ```elixir
+  def deps do
+    [{:molasses, "~> 0.2.0"}]
+  end
+  ```
   2. Install related dependencies by including `ExRedis`, `MongoDB` or `Ecto` and one of its adapter libraries for Postgres or Mysql.
 
-    2A. Redis
+  2A. Redis
 
-    For Redis, you will just need to include `exredis`:
+  For Redis, you will just need to include `exredis`:
 
-    ```elixir
-    def deps do
-      [
-        {:molasses, "~> 0.2.0"},
-        {:exredis, ">= 0.2.4"}
-      ]
-    end
-    ```
+  ```elixir
+  def deps do
+    [
+      {:molasses, "~> 0.2.0"},
+      {:exredis, ">= 0.2.4"}
+    ]
+  end
+  ```
 
-    2B. SQL using Ecto
+  2B. SQL using Ecto
 
-    For Ecto with PostgreSQL, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications:
+  For Ecto with PostgreSQL, install `ecto` and `postgrex`. You will also need to start ecto and postgrex as applications:
 
-    ```elixir
-    def deps do
-      [
-        {:molasses, "~> 0.2.0"},
-        {:ecto, "~> 2.1.1"},
-        {:postgrex, ">= 0.0.0"}
-      ]
-    end
+  ```elixir
+  def deps do
+    [
+      {:molasses, "~> 0.2.0"},
+      {:ecto, "~> 2.1.1"},
+      {:postgrex, ">= 0.0.0"}
+    ]
+  end
 
-    def application do
-      [applications: [:ecto, :postgrex]]
-    end
-    ```
+  def application do
+    [applications: [:ecto, :postgrex]]
+  end
+  ```
 
-    Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres.
+  Your config will also need to change. You will need to set up an Ecto Repo like you would [here](https://hexdocs.pm/ecto/Ecto.html#module-repositories). As well as set the Molasses adapter to postgres.
 
-    ```elixir
-    # molasses adapter setting
-    config :molasses, adapter: "ecto"
-    ```
+  ```elixir
+  # molasses adapter setting
+  config :molasses, adapter: "ecto"
+  ```
 
-    You will need to create an ecto migration and add the features tables.
+  You will need to create an ecto migration and add the features tables.
 
-    ```elixir
+  ```elixir
 
-        defmodule Repo.CreateTestMocks do
-          use Ecto.Migration
+    defmodule Repo.CreateTestMocks do
+      use Ecto.Migration
 
-          def change do
-            create table(:features) do
-              add :name, :string
-              add :percentage, :integer
-              add :users, :string
-              add :active, :boolean
-            end
-
-            create index(:features, [:name])
-          end
+      def change do
+        create table(:features) do
+          add :name, :string
+          add :percentage, :integer
+          add :users, :string
+          add :active, :boolean
         end
-     ```
 
-    2C. MongoDB
-
-    ```elixir
-    def deps do
-      [
-        {:molasses, "~> 0.2.0"},
-        {:mongodb, ">= 0.0.0"},
-      ]
+        create index(:features, [:name])
+      end
     end
-    ```
+  ```
 
-    For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
+  2C. MongoDB
+
+  ```elixir
+  def deps do
+    [
+      {:molasses, "~> 0.2.0"},
+      {:mongodb, ">= 0.0.0"},
+    ]
+  end
+  ```
+
+  For a working example of how to set up Molasses look at [Molasses Example](https://github.com/securingsincity/molasses-example)
 
 ## Usage
 
