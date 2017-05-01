@@ -35,5 +35,56 @@ if Code.ensure_loaded?(Phoenix) do
 
       render(conn, "details.html", feature: feature)
     end
+
+    def new(conn, _) do
+      render(conn, "new.html")
+    end
+
+    def delete(conn, %{"name" => name}) do
+      Molasses.remove(repo, name)
+      parent_url = Molasses.AdminPanel.AdminPanelView.parent_url(conn, name)
+      conn
+      |> put_flash(:info, "Toggle deleted")
+      |> redirect(to: parent_url)
+    end
+
+    def create(conn, %{"toggle" => %{"name" => name, "percentage" => percentage}}) do
+      percentage = String.to_integer(percentage)
+
+      case percentage >= 0 && percentage <= 100 do
+        true ->
+          Molasses.activate(repo, name, percentage)
+          conn
+          |> put_flash(:info, "Toggle created")
+          |> redirect(to: "/" <> Enum.join(conn.path_info))
+        false ->
+          conn
+          |> put_flash(:error, "Invalid Percentage")
+          |> put_status(400)
+          |> render("new.html")
+      end
+    end
+
+    def create(conn, %{"toggle" => %{"name" => name, "users" => users}}) do
+      Molasses.activate(repo, name, users)
+
+      conn
+      |> put_flash(:info, "Toggle created")
+      |> redirect(to: Enum.join(conn.path_info))
+    end
+
+    def create(conn, %{"toggle" => %{"name"=> name}}) do
+      Molasses.activate(repo, name)
+
+      conn
+      |> put_flash(:info, "Toggle created")
+      |> redirect(to: Enum.join(conn.path_info))
+    end
+
+    def create(conn, params) do
+      conn
+      |> put_status(400)
+      |> render(conn, "new.html")
+    end
   end
 end

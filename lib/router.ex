@@ -20,8 +20,12 @@ if Code.ensure_loaded?(Phoenix) do
 
     defmacro admin_panel_routes(_opts \\ []) do
       quote do
+        get "/create", AdminPanel.AdminPanelController, :new
         get "/:name", AdminPanel.AdminPanelController, :details
+        post "/:name", AdminPanel.AdminPanelController, :delete
+        delete "/:name", AdminPanel.AdminPanelController, :delete
         get "/", AdminPanel.AdminPanelController, :dashboard
+        post "/", AdminPanel.AdminPanelController, :create
       end
     end
   end

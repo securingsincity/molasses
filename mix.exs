@@ -44,6 +44,7 @@ defmodule Molasses.Mixfile do
       # optional deps
       {:ecto, "~> 2.1.1", optional: true},
       {:phoenix, ">= 1.2.1", optional: true},
+      {:phoenix_html, ">= 2.6.0", optional: true},
       {:exredis, ">= 0.2.4", optional: true},
       {:postgrex, ">= 0.0.0", optional: true},
       {:mongodb, ">= 0.0.0", optional: true},

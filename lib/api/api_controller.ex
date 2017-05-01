@@ -30,12 +30,19 @@ if Code.ensure_loaded?(Phoenix) do
       |> json(%{features: features})
     end
 
-    def create(conn, %{"name" => name, "percentage" => percentage}) do
+    def create(conn, %{"name" => name, "percentage" => percentage}) when (percentage <= 100 and percentage >= 0) do
       Molasses.activate(repo, name, percentage)
 
       conn
       |> put_status(201)
       |> json(%{feature: name, percentage: percentage})
+    end
+
+
+    def create(conn, %{"name" => name, "percentage" => percentage}) do
+      conn
+      |> put_status(400)
+      |> json(%{status: "failure", message: "invalid percentage"})
     end
 
     def create(conn, %{"name" => name, "users" => users}) do

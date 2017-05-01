@@ -1,0 +1,28 @@
+<h2>New Toggle</h2>
+
+
+<div>
+  <%= if get_flash(@conn, :info) do %>
+    <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
+  <% end %>
+  <%= if get_flash(@conn, :error) do %>
+    <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+  <% end %>
+</div>
+
+<%= form_for @conn, parent_url(@conn, "create"), [as: :toggle],
+             fn f -> %>
+
+  <div class="form-group">
+    <%= label f, :name, class: "control-label" %>
+    <%= text_input f, :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= label f, :percentage, class: "control-label" %>
+    <%= number_input f, :percentage, class: "form-control" %>
+  </div>
+
+
+   <%= submit "Create", class: "btn btn-primary" %>
+<% end %>

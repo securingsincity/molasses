@@ -151,6 +151,10 @@ defmodule Molasses do
     adapter.activate(client,key)
   end
 
+  def remove(client, key) do
+    adapter.remove(client, key)
+  end
+
   @doc """
   Activates a feature for some users.
   When the group argument is an integer then it sets the feature active for a percentage of users.

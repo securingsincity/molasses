@@ -2,3 +2,4 @@
 <p><%= @feature.percentage %></p>
 <p><%= @feature.users %></p>
 <p><%=  @feature.active %></p>
+<%= Phoenix.HTML.Link.link "All", to:  parent_url(@conn, @feature.name) %>
